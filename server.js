@@ -1,31 +1,49 @@
-import express from  'express';
-import createBookingTable from './models/bookingModel.js';
-import createUserTable from './models/userModel.js';
-import createBusTable from './models/busModel.js';  
-import createPaymentTable from './models/paymentModel.js';
-
-const app = express();
-
-app.use(express.json());
-
-const setUpDataBase = async () =>{
-  await createUserTable();
-  await createBusTable();
-  await createBookingTable();
-  await createPaymentTable();
-  console.log('Database setup complete');
-}
+// app.js
+import express from 'express';
+import db from './config/db.js';
+import dotenv from 'dotenv';
+import userRoutes from './routes/userRoutes.js';
  
+dotenv.config();
 
- setUpDataBase();
 
+// Create Express app
+const app = express();
+const PORT = process.env.PORT || 3000;
 
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Routes
+app.use('/api/users', userRoutes);
+
+// Home route
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.send('User Management API is running');
+});
 
-} )
-
-app.listen(5000, () => {
-    console.log('Server is running on port 5000');
+// Error handling for undefined routes
+app.use((req, res) => {
+  res.status(404).json({
+    status: 'error',
+    message: 'Route not found'
   });
-  
+});
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error('Global error:', err.stack);
+  res.status(500).json({
+    status: 'error',
+    message: 'Internal server error',
+    error: process.env.NODE_ENV === 'development' ? err.message : {}
+  });
+});
+
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
+export default app;
