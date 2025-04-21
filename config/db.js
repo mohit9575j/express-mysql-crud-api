@@ -1,25 +1,3 @@
-// import mysql from 'mysql2';
-
-// const db = mysql.createConnection({
-//     host: 'localhost',
-//     user: 'root',
-//     password: 'Gulana@123',
-//     database: 'testdb'
-// })
-
-// db.connect((err) => {
-//     if(err) {
-//         console.error('Error is accuring men',err);
-//         return;
-//     }else{
-//         console.log('connected to the database');
-//     }
-// })
-
-// export default db;
-
-
-
 
 
 // config/db.js
